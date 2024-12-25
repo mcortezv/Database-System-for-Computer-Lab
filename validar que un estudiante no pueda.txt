@@ -1,0 +1,3 @@
+validar que un estudiante no pueda inscribirse en dos carreras a la vez
+
+validar que la pc que se solicita no se este usando
