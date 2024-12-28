@@ -1,4 +1,4 @@
--- 1. Registra todas las licenciaturas que ofrece ITSON.
+-- 1. Register all the degrees (Licenciaturas). -----------------------------------------------------------
 
 USE cisco;
 INSERT INTO carreras (nombreCarrera, tiempoLimiteDiario)
@@ -37,12 +37,14 @@ VALUES
     ("Ingeniería en Software", "08:00:00"),
     ("Medicina Veterinaria y Zootecnia", "12:00:00");
 
--- 2. Registra la información de la institución.
+
+-- 2. Register the institution's information. --------------------------------------------------------------
 
 INSERT INTO institutos (nombreOficial, nombreAbreviado) VALUES ("Instituto Tecnologico de Sonora", "ITSON");
 
--- 3. Registra los datos del CISCO
--- i. Su jornada empieza a las 8 de la mañana y termina a las 10 de la noche.
+
+-- 3. Register the laboratory's data -----------------------------------------------------------------------
+-- i. Its schedule starts at 8 AM and ends at 10 PM.
 
 INSERT INTO laboratorios (nombre, contraseñaMaestra, idInstituto) 
 VALUES ("CISCO", "root123", 1);
@@ -99,8 +101,9 @@ INSERT INTO prestamospordia (inicioServicio, finServicio, fecha, idLaboratorio) 
 ("08:00:00", "22:00:00", "2024-11-18", 1),
 ("07:00:00", "21:00:00", "2024-11-19", 1);
 
--- 4. Registra al menos 20 computadoras.
--- i. Indica de 2 a 10 software por computadora.
+
+-- 4. Register at least 20 computers. ----------------------------------------------------------------------
+-- i. Assign 2 to 10 software per computer.
 
 INSERT INTO computadoras (direccionIp, numeroMaquina, idLaboratorio) VALUES 
     ("192.168.0.11", 1, 1),
@@ -166,8 +169,9 @@ INSERT INTO computadorasoftware (idComputadora, idSoftware) VALUES
     ("192.168.0.29", 3), ("192.168.0.29", 4),
     ("192.168.0.30", 5), ("192.168.0.30", 6);
 
--- 5. Registra por carrera 10 alumnos con los siguientes datos.
--- i. 8 inscritos y 2 no inscritos.
+
+-- 5. Register 10 students per career with the following data. ---------------------------------------------
+-- i. 8 enrolled and 2 not enrolled.
 
 INSERT INTO estudiantes (nombres, apellidoPaterno, apellidoMaterno, contraseñaAcceso, estatusInscripcion, idCarrera) VALUES
     ("Carlos", "Hernández", "López", "pass001", "Activo", 1),
@@ -501,53 +505,26 @@ INSERT INTO estudiantes (nombres, apellidoPaterno, apellidoMaterno, contraseñaA
     ("Claudia", "Montes", "Esquivel", "pass329", "Inactivo", 33),
     ("Felipe", "Guzmán", "Luna", "pass330", "Activo", 33);
 
--- 6. Registra 10 bloqueos.
--- i. 5 bloques liberados y 5 aún pendientes.
 
-INSERT INTO motivos (descripcionMotivo) VALUES
-    ("Incumplimiento de normas"),
-    ("Uso indebido de equipo"),
-    ("No respetó horario"),
-    ("Exceso de tiempo en equipo"),
-    ("Comportamiento inapropiado"),
-    ("Problemas de conducta"),
-    ("Interferencia en el equipo"),
-    ("Uso de programas no autorizados"),
-    ("Violación de privacidad"),
-    ("Uso prolongado sin permiso");
+-- 6. Register 10 blockages. ----------------------------------------------------------------------------------
+-- i. 5 blocks released and 5 still pending.
 
-INSERT INTO bloqueos (inicioBloqueo, idMotivo, idEstudiante) VALUES
-    ("2024-10-15 10:30:00", 1, 1),
-    ("2024-10-25 09:00:00", 2, 3),
-    ("2024-11-05 12:00:00", 3, 5),
-    ("2024-11-12 08:30:00", 4, 7),
-    ("2024-11-18 11:15:00", 5, 9);
+INSERT INTO bloqueos (inicioBloqueo, motivo, idEstudiante) VALUES
+    ("2024-10-15 10:30:00", "Incumplimiento de normas", 1),
+    ("2024-10-25 09:00:00", "Uso indebido de equipo", 3),
+    ("2024-11-05 12:00:00", "No respetó horario", 5),
+    ("2024-11-12 08:30:00", "Exceso de tiempo en equipo", 7),
+    ("2024-11-18 11:15:00", "Comportamiento inapropiado", 9);
 
-INSERT INTO bloqueos (inicioBloqueo, finBloqueo, idMotivo, idEstudiante, estatusBloqueo) VALUES
-    ("2024-10-20 14:00:00", "2024-11-20 14:00:00", 6, 2, "Liberado"),
-    ("2024-11-01 16:30:00", "2024-12-01 16:30:00", 7, 4, "Liberado"),
-    ("2024-11-10 15:00:00", "2024-12-10 15:00:00", 8, 6, "Liberado"),
-    ("2024-11-15 13:45:00", "2024-12-15 13:45:00", 9, 8, "Liberado"),
-    ("2024-11-20 10:45:00", "2024-12-20 10:45:00", 10, 10, "Liberado");
+INSERT INTO bloqueos (inicioBloqueo, finBloqueo, motivo, idEstudiante, estatusBloqueo) VALUES
+    ("2024-10-20 14:00:00", "2024-11-20 14:00:00", "Problemas de conducta", 2, "Liberado"),
+    ("2024-11-01 16:30:00", "2024-12-01 16:30:00", "Interferencia en el equipo", 4, "Liberado"),
+    ("2024-11-10 15:00:00", "2024-12-10 15:00:00", "Uso de programas no autorizados", 6, "Liberado"),
+    ("2024-11-15 13:45:00", "2024-12-15 13:45:00", "Violación de privacidad", 8, "Liberado"),
+    ("2024-11-20 10:45:00", "2024-12-20 10:45:00", "Uso prolongado sin permiso", 10, "Liberado");
 
-INSERT INTO notificaciones (metodoContacto, fechaEnvio, idBloqueo) VALUES
-    ("Telefono", "2024-10-15 10:30:00", 1),
-    ("Correo", "2024-10-20 14:00:00", 2),
-    ("Telefono", "2024-11-20 14:00:00", 2),
-    ("Correo", "2024-10-25 09:00:00", 3),
-    ("Telefono", "2024-11-01 16:30:00", 4),
-    ("Correo", "2024-12-01 16:30:00", 4),
-    ("Telefono", "2024-11-05 12:00:00", 5),
-    ("Correo", "2024-11-10 15:00:00", 6),
-    ("Telefono", "2024-12-10 15:00:00", 6),
-    ("Correo", "2024-11-12 08:30:00", 7),
-    ("Telefono", "2024-11-15 13:45:00", 8),
-    ("Correo", "2024-12-15 13:45:00", 8),
-    ("Telefono", "2024-11-18 11:15:00", 9),
-    ("Correo", "2024-11-20 10:45:00", 10),
-    ("Telefono", "2024-12-20 10:45:00", 10);
 
--- 7. Realiza 100 apartados (10 carreras diferentes) con los meses de octubre y noviembre.
+-- 7. Make 100 bookings (10 different careers) for the months of October and November. ------------------------
 
 INSERT INTO prestamos (inicioPrestamo, finPrestamo, idComputadora, idEstudiante, idPrestamoPorDia) VALUES
     ("08:12:45", "10:45:12", "192.168.0.11", 1, 1),
@@ -650,4 +627,3 @@ INSERT INTO prestamos (inicioPrestamo, finPrestamo, idComputadora, idEstudiante,
     ("11:50:18", "13:28:05", "192.168.0.26", 71, 49),
     ("12:50:18", "14:28:05", "192.168.0.26", 81, 50),
     ("01:50:18", "03:28:05", "192.168.0.26", 91, 50);
-
