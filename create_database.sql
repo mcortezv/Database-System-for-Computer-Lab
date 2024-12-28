@@ -69,10 +69,9 @@ CREATE TABLE Bloqueos (
     idBloqueo INT PRIMARY KEY AUTO_INCREMENT,
     inicioBloqueo DATETIME NOT NULL,
     finBloqueo DATETIME,
-    idMotivo INT NOT NULL,
+    motivo VARCHAR(400) NOT NULL,
     idEstudiante INT NOT NULL,
     estatusBloqueo ENUM("Pendiente", "Liberado") NOT NULL DEFAULT "Pendiente",
-    motivo VARCHAR(400) NOT NULL,
     FOREIGN KEY (idEstudiante) REFERENCES Estudiantes(idEstudiante),
     CHECK(finBloqueo > inicioBloqueo)
 );

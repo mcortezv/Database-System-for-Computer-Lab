@@ -10,7 +10,6 @@
         -- Minutes of inactivity
         -- Date
 
-SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY",""));
 USE cisco;
 
 SELECT 
@@ -36,7 +35,8 @@ WHERE
 	c.idCarrera IN (1, 2, 3, 7, 9, 11, 13, 15, 17, 19, 21) AND
     DATE(porDia.fecha) BETWEEN "2024-10-01" AND "2024-11-19"
 GROUP BY 
-    l.nombre, pc.numeroMaquina, DATE(porDia.fecha);
+    l.nombre, pc.numeroMaquina, porDia.inicioServicio, porDia.finServicio, 
+    p.inicioPrestamo, p.finPrestamo, DATE(porDia.fecha);
 
 
 -- Report 2: Careers --------------------------------------------------------------------
@@ -83,13 +83,11 @@ SELECT
     CONCAT(e.nombres, " ", e.apellidoPaterno, " ", e.apellidoMaterno) AS NombreAlumno,
     DATE(b.inicioBloqueo) AS FechaBloqueo,
     IFNULL(b.finBloqueo, "N/A") AS FechaLiberacion,
-    m.descripcionMotivo AS Motivo
+    b.motivo AS Motivo
 FROM 
     Estudiantes AS e
 INNER JOIN 
     Bloqueos AS b ON e.idEstudiante = b.idEstudiante
-INNER JOIN
-	Motivos AS m ON b.idMotivo = m.idMotivo
 WHERE 
 	DATE(b.inicioBloqueo) BETWEEN "2024-10-15" AND "2024-11-20"
 ORDER BY
@@ -268,11 +266,10 @@ USE cisco;
 SELECT
 	b.inicioBloqueo AS FechaBloqueo,
 	CONCAT(e.nombres, " ", e.apellidoPaterno, " ", e.apellidoMaterno) AS NombreCompleto,
-	m.descripcionMotivo AS Motivo,
+	b.motivo AS Motivo,
     COALESCE(b.finBloqueo, "N/A") AS FechaLiberacion
 FROM estudiantes AS e
 INNER JOIN bloqueos AS b ON e.idEstudiante = b.idEstudiante
-INNER JOIN motivos AS m ON b.idMotivo = m.idMotivo
 ORDER BY b.inicioBloqueo DESC, e.nombres ASC;
 
 
