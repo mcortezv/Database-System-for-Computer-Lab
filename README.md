@@ -1,6 +1,5 @@
 # Database System for Computer Lab
 
-## Description
 This project is a database system designed to manage computer labs at an educational institution. It keeps track of students, careers, institutes, labs, computers, software, and more. The database includes relationships and rules to make sure everything works correctly.
 
 ---
