@@ -65,11 +65,6 @@ CREATE TABLE Estudiantes (
     FOREIGN KEY (idCarrera) REFERENCES Carreras(idCarrera)
 );
 
-CREATE TABLE Motivos (
-    idMotivo INT PRIMARY KEY AUTO_INCREMENT,
-    descripcionMotivo VARCHAR(400) NOT NULL
-);
-
 CREATE TABLE Bloqueos (
     idBloqueo INT PRIMARY KEY AUTO_INCREMENT,
     inicioBloqueo DATETIME NOT NULL,
@@ -77,17 +72,9 @@ CREATE TABLE Bloqueos (
     idMotivo INT NOT NULL,
     idEstudiante INT NOT NULL,
     estatusBloqueo ENUM("Pendiente", "Liberado") NOT NULL DEFAULT "Pendiente",
-    FOREIGN KEY (idMotivo) REFERENCES Motivos(idMotivo),
+    motivo VARCHAR(400) NOT NULL,
     FOREIGN KEY (idEstudiante) REFERENCES Estudiantes(idEstudiante),
     CHECK(finBloqueo > inicioBloqueo)
-);
-
-CREATE TABLE Notificaciones (
-    idNotificacion INT PRIMARY KEY AUTO_INCREMENT,
-    metodoContacto ENUM("Telefono", "Correo") NOT NULL,
-    fechaEnvio DATETIME NOT NULL,
-    idBloqueo INT NOT NULL,
-    FOREIGN KEY (idBloqueo) REFERENCES Bloqueos(idBloqueo)
 );
 
 CREATE TABLE Prestamos (

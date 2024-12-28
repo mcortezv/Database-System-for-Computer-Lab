@@ -1,14 +1,110 @@
--- 1. Realiza la consulta para saber de los laboratorios cuantas ----------------------------------------------------------------
--- computadoras tienen y de manera adicional saber la información de la
--- universidad a la cual pertenecen, se desea que estén ordenados por el
--- nombre del laboratorio de forma descendiente.
-   -- Datos a mostrar
-     -- nombreInstitucion
-     -- alias
-     -- idLaboratorio
-	 -- nombreLaboratorio
-     -- cantidadComputadoras
-     -- Realizado por Leonel Carballo
+-- Report 1: Computer Center --------------------------------------------------------------
+    -- Filters
+        -- Careers (N Careers, this filter is optional)
+        -- Date Range (Start and End Date, this is mandatory)
+    -- Table Columns
+        -- Computer Center Name
+        -- Computer Number
+        -- Number of Students
+        -- Minutes of use per day
+        -- Minutes of inactivity
+        -- Date
+
+SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY",""));
+USE cisco;
+
+SELECT 
+    l.nombre AS NombreCentroComputo,
+    pc.numeroMaquina AS NumeroDeComputadora,
+    COUNT(DISTINCT p.idEstudiante) AS CantidadDeAlumnos,
+    SUM(TIMESTAMPDIFF(MINUTE, p.inicioPrestamo, p.finPrestamo)) AS MinutosDeUsoPorDia,
+    TIMESTAMPDIFF(MINUTE, porDia.inicioServicio, porDia.finServicio) - SUM(TIMESTAMPDIFF(MINUTE, p.inicioPrestamo, p.finPrestamo)) AS MinutosDeInactividad,
+    DATE(porDia.fecha) AS Fecha
+FROM 
+    Laboratorios AS l
+INNER JOIN 
+    Computadoras AS pc ON l.idLaboratorio = pc.idLaboratorio
+INNER JOIN 
+    Prestamos AS p ON pc.direccionIP = p.idComputadora
+INNER JOIN 
+    PrestamosPorDia AS porDia ON p.idPrestamoPorDia = porDia.idPrestamoPorDia
+INNER JOIN 
+    Estudiantes AS e ON p.idEstudiante = e.idEstudiante
+INNER JOIN 
+    Carreras AS c ON e.idCarrera = c.idCarrera
+WHERE 
+	c.idCarrera IN (1, 2, 3, 7, 9, 11, 13, 15, 17, 19, 21) AND
+    DATE(porDia.fecha) BETWEEN "2024-10-01" AND "2024-11-19"
+GROUP BY 
+    l.nombre, pc.numeroMaquina, DATE(porDia.fecha);
+
+
+-- Report 2: Careers --------------------------------------------------------------------
+    -- Filters
+        -- Careers (N Careers, this filter is optional)
+        -- Date Range (Start and End Date, this is mandatory)
+    -- Table Columns
+        -- Career Name
+        -- Minutes of use per day
+        -- Number of Students
+        -- Date 
+
+SELECT 
+    c.nombreCarrera AS NombreCarrera,
+    SUM(TIMESTAMPDIFF(MINUTE, p.inicioPrestamo, p.finPrestamo)) AS MinutosDeUso,
+    COUNT(DISTINCT p.idEstudiante) AS CantidadDeAlumnos,
+    DATE(porDia.fecha) AS Fecha
+FROM 
+    Carreras AS c
+INNER JOIN 
+    Estudiantes AS e ON c.idCarrera = e.idCarrera
+INNER JOIN 
+    Prestamos AS p ON e.idEstudiante = p.idEstudiante
+INNER JOIN 
+    PrestamosPorDia AS porDia ON p.idPrestamoPorDia = porDia.idPrestamoPorDia
+WHERE 
+	DATE(porDia.fecha) BETWEEN "2024-10-01" AND "2024-11-19"
+GROUP BY 
+    c.idCarrera, DATE(porDia.fecha);    
+
+
+-- Report 3: Blockages -------------------------------------------------------------------
+    -- Filters
+        -- Date Range (Start and End Date, this is mandatory)
+    -- Table Columns
+        -- Student Name
+        -- Block Date
+        -- Release Date (if not released, indicate "N/A")
+        -- Reasons
+
+USE cisco;
+
+SELECT 
+    CONCAT(e.nombres, " ", e.apellidoPaterno, " ", e.apellidoMaterno) AS NombreAlumno,
+    DATE(b.inicioBloqueo) AS FechaBloqueo,
+    IFNULL(b.finBloqueo, "N/A") AS FechaLiberacion,
+    m.descripcionMotivo AS Motivo
+FROM 
+    Estudiantes AS e
+INNER JOIN 
+    Bloqueos AS b ON e.idEstudiante = b.idEstudiante
+INNER JOIN
+	Motivos AS m ON b.idMotivo = m.idMotivo
+WHERE 
+	DATE(b.inicioBloqueo) BETWEEN "2024-10-15" AND "2024-11-20"
+ORDER BY
+    e.nombres ASC;
+
+
+-- Report 4: Query to know how many computers each laboratory has, along with additional 
+-- information about the university they belong to. The results should be ordered by 
+-- laboratory name in descending order.
+    -- Data to Show
+        -- InstitutionName
+        -- Alias
+        -- LabId
+        -- LabName
+        -- NumberOfComputers
 
 USE cisco;
 
@@ -33,11 +129,9 @@ ORDER BY
     l.nombre DESC;
 
 
--- 2. Realiza la consulta para saber de cada carrera cuantos alumnos ------------------------------------------------------------
--- inscritos tienen actualmente, se desea que estén ordenados por 
--- nombre de la carrera de forma descendiente seguido del nombre del 
--- alumno. 
--- Realizado por Manuel Cortez
+-- Report 5: Query to know how many students each career currently has enrolled. 
+-- The results should be ordered by career name in descending order followed by the 
+-- student name. 
 
 USE cisco;
 
@@ -50,13 +144,11 @@ GROUP BY c.nombreCarrera
 ORDER BY c.nombreCarrera DESC;
 
 
--- 3. Realiza la consulta para saber cuántos apartados por fecha en lo que va ---------------------------------------------------
--- del año (no hardcore) cuenta el laboratorio CISCO, ordena la
--- información por la fecha de forma descendiente.
-   -- Datos a mostrar
-     -- fecha
-     -- cantidadApartados
-     -- Realizado por Leonel Carballo
+-- Report 6: Query to know how many bookings per date have been made so far this year 
+-- (non-hardcore) for the CISCO laboratory, ordered by date in descending order.
+    -- Data to Show
+        -- Date
+        -- NumberOfBookings
 
 SELECT
     pd.fecha,
@@ -68,11 +160,9 @@ GROUP BY pd.fecha
 ORDER BY pd.fecha DESC;
 
 
--- 4. Realiza la consulta para saber cuántos apartados por fecha en lo que ----------------------------------------------------
--- van del año (no hardcore) tiene cada carrera en el laboratorio CISCO, 
--- ordena la información por el nombre de la carrera de forma ascendente 
--- seguido de la fecha de forma descendiente. 
--- Realizado por Manuel Cortez
+-- Report 7: Query to know how many bookings per date each career has made so far this 
+-- year (non-hardcore) for the CISCO laboratory, ordered by career name in ascending order 
+-- followed by date in descending order. 
 
 USE cisco;
 
@@ -92,13 +182,12 @@ GROUP BY c.nombreCarrera, porDia.fecha
 ORDER BY c.nombreCarrera ASC, porDia.fecha DESC;
 
 
--- 5. Realiza la consulta para saber qué carrera es la que tiene más apartados ------------------------------------------------
--- en lo que va del año (no hardcore) en CISCO y en qué fecha sucedió.
-   -- Datos a mostrar
-     -- nombreCarrera
-     -- fecha
-     -- cantidadApartados
-     -- Realizado por Leonel Carballo
+-- Report 8: Query to find the career with the most bookings so far this year ------------
+-- (non-hardcore) in CISCO and the date when it occurred.
+    -- Data to Show
+        -- CareerName
+        -- Date
+        -- NumberOfBookings
 
 USE cisco;
 
@@ -127,9 +216,7 @@ ORDER BY
 LIMIT 1;
 
 
--- 6. Realiza la consulta para saber en qué fecha el cisco tuvo menos ---------------------------------------------------
--- minutos de apartados de sus computadoras.
--- Realizado por Manuel Cortez
+-- Report 9: Query to know when CISCO had the least minutes of bookings for its computers.
 
 USE cisco;
 
@@ -144,14 +231,12 @@ ORDER BY MinutosActividad ASC
 LIMIT 1;
 
 
--- 7. Basado del punto 6 dime cuales fueron las dos carreras que tuvieron ---------------------------------------------
--- menos minutos de apartados.
-   -- Datos a mostrar
-     -- fecha
-     -- nombreCarrera
-     -- minutosActividad
-     -- minutosInactividad
-	 -- Realizado por Leonel Carballo
+-- Report 10: Based on point 6, tell me which two careers had the least minutes of bookings.
+    -- Data to Show
+        -- Date
+        -- CareerName
+        -- ActivityMinutes
+        -- InactivityMinutes
 
 USE cisco;
 
@@ -175,10 +260,8 @@ ORDER BY
 LIMIT 2;
 
 
--- 8. Realiza la consulta para indicarme los alumnos y que bloqueos tienen, ------------------------------------------
--- ordena la información por la fecha de forma descendiente seguido del 
--- nombre del alumno de forma ascendiente.
--- Realizado por Manuel Cortez
+-- Report 11: Query to show students and their blockages, ordered by date in descending 
+-- order followed by student name in ascending order.
 
 USE cisco;
 
@@ -193,16 +276,15 @@ INNER JOIN motivos AS m ON b.idMotivo = m.idMotivo
 ORDER BY b.inicioBloqueo DESC, e.nombres ASC;
 
 
--- 9. Realiza la consulta para indicarme las 5 computadoras que en el último ------------------------------------------
--- mes tiene más apartados e indica la cantidad de apartados por carrera,
--- ordénalos por la cantidad de apartados de forma descendiente.
-   -- Datos a mostrar
-     -- ip
-     -- numero
-     -- software (separado por comas)
-     -- carrera
-     -- cantidadApartados    
-     -- Realizado por Leonel Carballo
+-- Report 12: Query to show the 5 computers with the most bookings in the last month, 
+-- indicating the number of bookings per career, ordered by the number of bookings in 
+-- descending order.
+    -- Data to Show
+        -- Ip
+        -- Number
+        -- Software (separated by commas)
+        -- Career
+        -- NumberOfBookings     
  
 USE cisco;
 
@@ -235,9 +317,7 @@ ORDER BY
 LIMIT 5;
 
 
--- 10. Realiza la consulta para indicarme las computadoras que tienen un ------------------------------------------
--- software que contenga la letra “o”.
--- Realizado por Manuel Cortez
+-- Report 13: Query to show computers with software that contains the letter “o”.
 
 USE cisco;
 
@@ -252,13 +332,11 @@ WHERE s.nombre LIKE "%o%"
 GROUP BY c.direccionIP, c.numeroMaquina;
 
 
--- 11.Realiza la consulta para indicarme que ip se repite en el mismo ------------------------------------------
--- laboratorio.
-   -- Datos a mostrar
-     -- id
-     -- ip
-     -- numero   
-     -- Realizado por Leonel Carballo
+-- Report 14: Query to show which IP repeats in the same laboratory. ------------------
+    -- Data to Show
+        -- Id
+        -- Ip
+        -- Number  
      
 USE cisco;
 
@@ -272,11 +350,9 @@ GROUP BY l.idLaboratorio, c.direccionIp
 HAVING VecesRepetidas > 1;
 
 
--- 12. Realiza el script donde registres 10 apartados de diferente carrera y que -------------------------------------
--- los minutos de actividad sean de 10 minutos en la fecha de hoy (la fecha 
--- la tiene que tomar fecha y hora actual que se realice el script no 
--- hardcore).
--- Realizado por Manuel Cortez
+-- Report 15: Script to register 10 bookings from different careers, where activity 
+-- minutes are 10 minutes on today’s date (the script should take the current date and 
+-- time, no hardcore).
 
 USE cisco;
 
@@ -296,16 +372,15 @@ INSERT INTO prestamos (inicioPrestamo, finPrestamo, idComputadora, idEstudiante,
     (CURTIME(), CURTIME() + INTERVAL 10 MINUTE, "192.168.0.20", 91, 51);
     
     
--- 13.Realiza la consulta para indicarme los alumnos que interactuaron en el ------------------------------------------
--- punto 10 muestre la siguiente información.
-   -- Datos a mostrar
-     -- carrera
-     -- tiempoLimiteCarrera
-     -- nombreCompletoAlumno
-     -- id
-     -- minutosActividad
-     -- minutosDisponibles
-     -- Realizado por Leonel Carballo
+-- Report 16: Query to show the students who interacted in point 10 and display the 
+-- following information.
+    -- Data to Show
+        -- Career
+        -- CareerTimeLimit
+        -- StudentFullName
+        -- Id
+        -- ActivityMinutes
+        -- AvailableMinutes
   
 USE cisco;
 
