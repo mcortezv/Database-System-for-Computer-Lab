@@ -1,10 +1,10 @@
-# Sistema de Base de Datos para Laboratorio de Computación
+# **Sistema de Base de Datos para Laboratorio de Computación**
 
 Este proyecto es un sistema de base de datos diseñado para gestionar laboratorios de computación en una institución educativa. Realiza un seguimiento de estudiantes, carreras, institutos, laboratorios, computadoras, software, y más. La base de datos incluye relaciones y reglas para garantizar un correcto funcionamiento.
 
 ---
 
-## Tabla de Contenidos
+## **Tabla de Contenidos**
 - [Estructura de la Base de Datos](#estructura-de-la-base-de-datos)
 - [Creación de la Base de Datos](#creación-de-la-base-de-datos)
 - [Inserción de Datos](#inserción-de-datos)
@@ -12,7 +12,7 @@ Este proyecto es un sistema de base de datos diseñado para gestionar laboratori
 - [Cómo Usar](#cómo-usar)
 - [Licencia](#licencia)
 
-## Estructura de la Base de Datos
+## **Estructura de la Base de Datos**
 
 ### Tablas y Relaciones
 
@@ -84,11 +84,11 @@ Este proyecto es un sistema de base de datos diseñado para gestionar laboratori
 
 ---
 
-## Creación de la Base de Datos
+## **Creación de la Base de Datos**
 
 El archivo `create_database.sql` incluye las sentencias `CREATE DATABASE` y `CREATE TABLE` con todas las restricciones necesarias para mantener la integridad referencial y las reglas de negocio.
 
-## Inserción de Datos
+## **Inserción de Datos**
 
 El archivo `inserts.sql` contiene instrucciones para poblar la base de datos con valores iniciales:
 
@@ -98,7 +98,7 @@ INSERT INTO Institutos (nombreOficial, nombreAbreviado) VALUES ('Instituto Tecno
 -- Más ejemplos disponibles en el archivo.
 ```
 
-## Consultas
+## **Consultas**
 
 El archivo `queries.sql` incluye consultas útiles para aprovechar la información almacenada:
 
@@ -112,7 +112,7 @@ SELECT * FROM Estudiantes WHERE estatusInscripcion = 'Activo';
 SELECT nombre FROM Laboratorios WHERE idInstituto = 1;
 ```
 
-## Cómo Usar
+## **Cómo Usar**
 
 ### 1. Configuración:
 - Asegúrate de tener un servidor SQL compatible (MySQL).
@@ -124,5 +124,5 @@ SELECT nombre FROM Laboratorios WHERE idInstituto = 1;
 ### 3. Consultas:
 - Usa `queries.sql` para realizar las operaciones y consultas necesarias.
 
-## Licencia
+## **Licencia**
 Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENSE.md) para más detalles.

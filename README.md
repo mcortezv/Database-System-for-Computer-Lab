@@ -1,18 +1,18 @@
-# Database System for Computer Lab
+# **Database System for Computer Lab** <a href="./README.es.md" style="font-size: medium;">Versión Español</a>
 
 This project is a database system designed to manage computer labs at an educational institution. It keeps track of students, careers, institutes, labs, computers, software, and more. The database includes relationships and rules to make sure everything works correctly.
 
 ---
 
-## Table of Contents
+## **Table of Contents**
 - [Database Structure](#database-structure)
 - [Database Creation](#database-creation)
 - [Data Insertion](#data-insertion)
 - [Queries](#queries)
 - [How to Use](#how-to-use)
-- [License](#license)
+- [License](#license) 
 
-## Database Structure
+## **Database Structure**
 
 ### Tables and Relationships
 
@@ -84,11 +84,11 @@ This project is a database system designed to manage computer labs at an educati
 
 ---
 
-## Database Creation
+## **Database Creation**
 
 The `create_database.sql` file includes the `CREATE DATABASE` and `CREATE TABLE` statements with all necessary constraints to maintain referential integrity and business rules.
 
-## Data Insertion
+## **Data Insertion**
 
 The `inserts.sql` file contains instructions to populate the database with initial values:
 
@@ -98,7 +98,7 @@ INSERT INTO Institutos (nombreOficial, nombreAbreviado) VALUES ('Instituto Tecno
 -- More examples available in the file.
 ```
 
-## Queries
+## **Queries**
 
 The `queries.sql` file includes useful queries to exploit the stored information:
 
@@ -112,7 +112,7 @@ SELECT * FROM Estudiantes WHERE estatusInscripcion = 'Activo';
 SELECT nombre FROM Laboratorios WHERE idInstituto = 1;
 ```
 
-## How to Use
+## **How to Use**
 
 ### 1. Setup:
 - Ensure you have a compatible SQL server (MySQL).
@@ -125,5 +125,5 @@ SELECT nombre FROM Laboratorios WHERE idInstituto = 1;
 - Use `queries.sql` to perform the necessary operations and queries.
 
 
-## License
+## **License**
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE.md) file for more details.
